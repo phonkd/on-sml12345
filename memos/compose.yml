@@ -1,0 +1,10 @@
+version: "3.3"
+services:
+  memos:
+    init: true
+    container_name: memos
+    ports:
+      - 5230:5230
+    volumes:
+      - /data/memos-data:/var/opt/memos
+    image: neosmemo/memos:stable

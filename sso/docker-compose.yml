@@ -1,0 +1,64 @@
+---
+version: "3.8"
+networks:
+  net:
+    driver: bridge
+    name: net
+services:
+  traefik:
+    container_name: traefik
+    image: traefik:v2.9
+    restart: unless-stopped
+    command:
+      - '--api=true'
+      - '--api.dashboard=true'
+      - '--api.insecure=false'
+      - '--pilot.dashboard=false'
+      - '--global.sendAnonymousUsage=false'
+      - '--global.checkNewVersion=false'
+      - '--log=true'
+      - '--log.level=DEBUG'
+      - '--providers.docker=true'
+      - '--providers.docker.exposedByDefault=false'
+      - '--entryPoints.http=true'
+      - '--entryPoints.http.address=:8080/tcp'
+      - '--entryPoints.http.http.redirections.entryPoint.to=https'
+      - '--entryPoints.http.http.redirections.entryPoint.scheme=https'
+      - '--certificatesresolvers.cloudflare.acme.email=bhonk123@gmail.com'
+      - '--certificatesresolvers.cloudflare.acme.storage=/letsencrypt/acme.json'
+      - '--certificatesresolvers.cloudflare.acme.dnschallenge=true'
+      - '--certificatesresolvers.cloudflare.acme.dnschallenge.provider=cloudflare'
+      ## Please see the Forwarded Header Trust section of the Authelia Traefik Integration documentation.
+      - '--entryPoints.http.forwardedHeaders.trustedIPs=10.0.0.0/8,172.16.0.0/16,192.168.0.0/16,fc00::/7'
+      - '--entryPoints.http.proxyProtocol.trustedIPs=10.0.0.0/8,172.16.0.0/16,192.168.0.0/16,fc00::/7'
+      - '--entryPoints.http.forwardedHeaders.insecure=false'
+      - '--entryPoints.http.proxyProtocol.insecure=false'
+      - '--entryPoints.https=true'
+      - '--entryPoints.https.address=:8443/tcp'
+      ## Please see the Forwarded Header Trust section of the Authelia Traefik Integration documentation.
+      - '--entryPoints.https.forwardedHeaders.trustedIPs=10.0.0.0/8,172.16.0.0/16,192.168.0.0/16,fc00::/7'
+      - '--entryPoints.https.proxyProtocol.trustedIPs=10.0.0.0/8,172.16.0.0/16,192.168.0.0/16,fc00::/7'
+      - '--entryPoints.https.forwardedHeaders.insecure=false'
+      - '--entryPoints.https.proxyProtocol.insecure=false'
+      - '--entryPoints.http.http.redirections.entryPoint.to=443' ## Forbidden line to fix 8443
+      #- '--entrypoints.http.http.redirections.entryPoint.to=:443'
+    environment:
+      - "CF_API_EMAIL=bhonk123@gmail.com"
+      - "CF_DNS_API_TOKEN=Oba-BIy4UUyccpH28kyCt7k-dmVUZIciexbCqHSy"
+    networks:
+      net: {}
+    ports:
+      - "80:8080"
+      - "443:8443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /data/traefik/traefik-config:/config
+      - /data/traefik/letsencrypt:/letsencrypt
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.api.rule=Host(`traefik.gibb.phonkd.net`)'
+      - 'traefik.http.routers.api.entryPoints=https'
+      - 'traefik.http.routers.api.tls=true'
+      - 'traefik.http.routers.api.service=api@internal'
+      - 'traefik.http.routers.api.tls.certresolver=cloudflare'
+
