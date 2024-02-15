@@ -1,0 +1,33 @@
+#!/bin/bash
+cd /data/
+ssh_pass_installed=$(dpkg -s sshpass &>/dev/null && echo "true" || echo "false")
+sftp-password="" 
+remote_path="/home"
+sftp_user=""
+sftp_host="sftp.iet-gibb.ch"
+date=$(date +%U)
+tarname="KW"$date".tar.gz"
+tarcmd="tar -czvf "$tarname" "$path_to_files
+# check if sshpass is installed
+if [ $ssh_pass_installed = "true" ]
+then
+	echo "sshpass found"
+else
+	echo "sshpass is not installed therefore the script can not upload the file"
+	echo "do you want to continue anyways yes/any(no)"
+	read continue_anyways
+	if [ $continue_anyways = "yes" ]
+	then
+		"moving on"
+	else
+		exit
+	fi
+	
+fi
+
+#Tar
+$tarcmd
+# Connect to the server and upload the file
+sshpass -p $sftp-password sftp -oBatchMode=no -b - $sftp_user@$sftp_host << EOF
+put $tarname /Home-Filer06/backups/
+bye

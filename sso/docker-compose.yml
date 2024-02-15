@@ -43,8 +43,8 @@ services:
       - '--entryPoints.http.http.redirections.entryPoint.to=443' ## Forbidden line to fix 8443
       #- '--entrypoints.http.http.redirections.entryPoint.to=:443'
     environment:
-      - "CF_API_EMAIL=bhonk123@gmail.com"
-      - "CF_DNS_API_TOKEN=Oba-BIy4UUyccpH28kyCt7k-dmVUZIciexbCqHSy"
+      - "CF_API_EMAIL=CHANGEME"
+      - "CF_DNS_API_TOKEN=CHANGEME"
     networks:
       net: {}
     ports:
