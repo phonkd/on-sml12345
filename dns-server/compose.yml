@@ -1,0 +1,20 @@
+version: '3.6'
+services:
+  bind:
+    image: eafxx/bind
+    restart: unless-stopped
+    ports:
+      - 53:53/tcp
+      - 53:53/udp
+      - 10000:10000
+    expose:
+      - 10000
+    volumes:
+      - /data/webmin:/data
+    environment:
+      - WEBMIN_ENABLED=true
+      - WEBMIN_INIT_SSL_ENABLED=false
+      - WEBMIN_INIT_REFERERS=vmls3.m300.smartlearn.ch
+      - WEBMIN_INIT_REDIRECT_PORT=10000
+      - ROOT_PASSWORD=sml123456
+      - TZ=Europe/Zurich
