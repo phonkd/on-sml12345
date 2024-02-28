@@ -3,7 +3,7 @@ services:
 
   traefik:
     networks:
-      traefik-proxy:
+     - traefik-proxy:
     image: "traefik:v3.0"
     container_name: "traefik"
     labels:
