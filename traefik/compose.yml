@@ -2,6 +2,8 @@ version: "3.3"
 services:
 
   traefik:
+    networks:
+      traefik-proxy:
     image: "traefik:v3.0"
     container_name: "traefik"
     labels:
@@ -34,6 +36,6 @@ services:
       - /data/traefik-certs/privkey.pem:/etc/traefik/certs/defaults/privkey.pem
 
 networks:
-  default:
+  traefik-proxy:
     external:
       name: traefik-proxy
