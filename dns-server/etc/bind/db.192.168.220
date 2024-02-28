@@ -1,0 +1,14 @@
+; BIND data file for 220.168.192.in-addr.arpa
+;
+$TTL 86400      ; (1 day)
+@	IN	SOA	ns.m300.smartlearn.ch. root.m300.smartlearn.ch. (
+			2024022800
+			14400
+			1800
+			1209600
+			3600 )
+;
+@       172800  IN      NS      ns.m300.smartlearn.ch.
+1       IN      PTR     vmlf1.lan.m300.smartlearn.ch.
+99       IN      PTR     test99.smartlearn.lan
+13		IN		PTR		vmlp1.dmz.m300.smartlearn.ch
